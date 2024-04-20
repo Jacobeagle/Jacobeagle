@@ -1,0 +1,36 @@
+#include <discord_rpc.h>
+#include <string>
+
+// Funkcja do aktualizacji obecności na Discordzie
+void UpdatePresence() {
+    DiscordRichPresence discordPresence;
+    memset(&discordPresence, 0, sizeof(discordPresence));
+    discordPresence.state = "Thinking";
+    discordPresence.details = "Generating responses";
+    discordPresence.startTimestamp = time(nullptr); // Aktualny czas
+    discordPresence.largeImageText = "AI Bot";
+    discordPresence.smallImageText = "Level ∞";
+    discordPresence.partyId = "ai-bot-party-id";
+    discordPresence.partySize = 1;
+    discordPresence.partyMax = 10; // Dla przykładu
+    discordPresence.joinSecret = "AI-Secret-Key";
+    Discord_UpdatePresence(&discordPresence);
+}
+
+int main() {
+    // Inicjalizacja Discord RPC
+    DiscordEventHandlers handlers;
+    memset(&handlers, 0, sizeof(handlers));
+    Discord_Initialize("1231321878967222313", &handlers, 1, nullptr);
+
+    // Pętla główna programu
+    while (true) {
+        // Aktualizacja obecności co sekundę
+        UpdatePresence();
+        sleep(1); // Pauza na sekundę
+    }
+
+    // Zwolnienie zasobów Discord RPC
+    Discord_Shutdown();
+    return 0;
+}
